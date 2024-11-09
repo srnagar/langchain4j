@@ -56,6 +56,20 @@ class InternalAzureOpenAiHelperTest {
         assertThat(client).isNotNull();
     }
 
+    @Test
+    void setupOpenAIAsyncClientShouldReturnClientWithAppIdSuffix() {
+        String endpoint = "test-endpoint";
+        String serviceVersion = "test-service-version";
+        String apiKey = "test-api-key";
+        Duration timeout = Duration.ofSeconds(30);
+        Integer maxRetries = 5;
+        boolean logRequestsAndResponses = true;
+
+        OpenAIAsyncClient client = InternalAzureOpenAiHelper.setupAsyncClient(endpoint, serviceVersion, apiKey, timeout, maxRetries, null, logRequestsAndResponses, "test-suffix", null);
+
+        assertThat(client).isNotNull();
+    }
+
 
     @Test
     void getOpenAIServiceVersionShouldReturnCorrectVersion() {
