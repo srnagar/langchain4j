@@ -36,6 +36,7 @@ import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.RetryOptions;
 import com.azure.core.util.BinaryData;
+import com.azure.core.util.Header;
 import com.azure.core.util.HttpClientOptions;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.agent.tool.ToolParameters;
@@ -65,6 +66,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static dev.langchain4j.data.message.AiMessage.aiMessage;
 import static dev.langchain4j.internal.Utils.getOrDefault;
@@ -112,6 +114,13 @@ class InternalAzureOpenAiHelper {
             applicationId = DEFAULT_APP_ID + "-" + applicationIdSuffix;
         }
         clientOptions.setApplicationId(applicationId);
+
+        if (customHeaders != null) {
+            List<Header> headers = customHeaders.entrySet().stream()
+                .map(entry -> new Header(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toUnmodifiableList());
+            clientOptions.setHeaders(headers);
+        }
 
         HttpClient httpClient = new NettyAsyncHttpClientProvider().createInstance(clientOptions);
 

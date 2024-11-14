@@ -60,6 +60,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static dev.langchain4j.data.message.AiMessage.aiMessage;
 import static dev.langchain4j.internal.Utils.getOrDefault;
@@ -138,6 +139,13 @@ class InternalGitHubModelHelper {
             applicationId = DEFAULT_APP_ID + "-" + applicationIdSuffix;
         }
         clientOptions.setApplicationId(applicationId);
+
+        if (customHeaders != null) {
+            List<Header> headers = customHeaders.entrySet().stream()
+                .map(entry -> new Header(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toUnmodifiableList());
+            clientOptions.setHeaders(headers);
+        }
         return clientOptions;
     }
 
